@@ -1,0 +1,14 @@
+let text = ('Paragraphs are medium-sized units of writing, longer than sentences, but shorter than sections, chapters, or entire works. Because they connect the "small" ideas of individual sentences to a "bigger" idea, paragraph structure is essential to any writing for organization, flow, and comprehension. Students have a lot of questions when it comes to writing a paragraph: How many sentences should you use? How do you transition within a paragraph? When do you end a paragraph? Etc. Below we explain everything you need to know about paragraph structure to write like an expert, including several paragraph examples.');
+var words1 = text.split('. ');
+console.log(words1.length);
+var words2= text.split(' ');
+console.log(words2.length);
+console.log(text.length);
+var words3 = text.match(/paragraph/g);
+console.log(words3.length);
+var words4 = text.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/g);
+console.log(words4.length);
+var words5 = text.replace(/paragraph/g,"para");
+console.log(words5);
+var result = text.slice(123);
+console.log(result);
