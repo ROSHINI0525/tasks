@@ -11,7 +11,7 @@ Opponent="paper";
 else {
 Opponent="scissor";
 }
-console.log(Opponent);if (You==Opponent)
+console.log(Opponent);if (player==Opponent)
 {
 console.log("tie");
 }
