@@ -19,7 +19,9 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
-
-Route.post('/insert', 'ConsController.insert').middleware('Mid')
+Route.post('/inset', 'ConsController.inset')
+Route.post('/insert', 'ConsController.insert') //.middleware('Mid')
 Route.delete('/delete', 'ConsController.delete')
 Route.patch('/update', 'ConsController.update')
+Route.post('/join', 'ConsController.join')
+//Route.post('/insert', 'Cons2sController.insert').middleware('Mid2')
