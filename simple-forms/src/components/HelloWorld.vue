@@ -1,10 +1,7 @@
 <template>
   <v-app>
-      <v-form
-     ref="form"
-     v-model="valid"
-     lazy-validation
-   >
+      <v-form>
+     
      <v-text-field
        v-model="name"
        :rules="nameRules"
