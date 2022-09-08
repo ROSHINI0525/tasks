@@ -69,7 +69,7 @@
        submit
      </v-btn> 
      <v-btn
-     v-else
+     v-if="!random"
        :disabled="!valid"
        color="success"
        @click="save" >
@@ -140,7 +140,7 @@
                 this.dialog = false
             },
            validate () {
-            const info = this.info
+            // const info = this.info
             this.$refs.form.validate()
              this.info.push({
                name : this.name,
@@ -149,8 +149,11 @@
                selectedLocation: this.selectedLocation,
                selectedHobbies:this.selectedHobbies,
              }),
-             console.log(info[0])
-             this.$refs.form.reset()
+            //  this.random=false
+             this.dialog=false
+            //  console.log(info[0])
+            //  this.$refs.form
+            this.reset()
              this.close()
            },
 
@@ -173,7 +176,7 @@
         this.selectedLocation= item.selectedLocation
       },
       save() {
-        let test = this.arr.findIndex(temp => temp.id == this.tempObj.id)
+        let test = this.info.findIndex(temp => temp.id == this.tempObj.id)
         
           this.info[test].name = this.name
           this.info[test].email = this.email
@@ -181,8 +184,17 @@
           this.info[test].selectedHobbies= this.selectedHobbies
           this.info[test].selectedLocation= this.selectedLocation
          this.random=true
+         this.reset()
+         this.close()
 
-       }
+       },
+       reset(){
+        this.name = ''
+        this.email =''
+        this.gender =''
+        this.selectedHobbies=''
+        this.selectedLocation= ''
+      }
     }
     }
     </script>
