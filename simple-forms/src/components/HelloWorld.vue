@@ -1,110 +1,188 @@
 <template>
-  <v-app>
+    <v-app>
       <v-form
-     ref="form"
-     v-model="valid"
-     lazy-validation
-   >
-     <v-text-field
+      ref="form"
+      v-model="valid"
+      lazy-validation
+      >
+      <v-dialog v-model="dialog" width="750" color="yellow">
+      <template v-slot:activator="{ on, attrs }">
+        <v-flex text-right align-right>
+          <v-btn
+            color="primary"
+            v-bind="attrs"
+            v-on="on"
+          >
+          <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-flex>
+        </template>
+        <v-card class="white">
+            <v-text-field
        v-model="name"
        :rules="nameRules"
        label="Name"
        required
-     ></v-text-field>
+     >Name</v-text-field>
      <v-text-field
        v-model="email"
        :rules="emailRules"
        label="E-mail"
        required
      ></v-text-field>
-     <br>
-     <h3>Gender</h3>
+     <!-- <br> -->
+     <h2>Gender</h2>
      <v-radio-group
-     v-model="radio"
-     column
+     v-model="gender"
+     row
      >
              <v-radio
                label="male"
-               value="primary"
+               value="male"
              ></v-radio>
              <v-radio
                label="female"
-               value="secondary"
+               value="female"
              ></v-radio>
        </v-radio-group>
    <h2>Hobbies</h2>
    <v-checkbox
-   v-model="selected"
-   label="cricket"
-   value="Cricket"
-   ></v-checkbox>
-   <v-checkbox
-     v-model="selected"
-     label="Music"
-     value="Music"
-   ></v-checkbox>
-   <v-checkbox
-     v-model="selected"
-     label="Reading"
-     value="Reading"
-   ></v-checkbox>
-   <v-checkbox
-     v-model="selected"
-     label="Others"
-     value="Others"
-   ></v-checkbox>
-   <v-select
-       v-model="select"
+      v-model="selectedHobbies"
+      v-for="(i) in hobbies"
+      :key = "i"
+      :label="i"
+      :value="i">
+    </v-checkbox>
+
+   <v-autocomplete
+       v-model="selectedLocation"
        :items="location"
        :rules="[v => !!v || 'Location is required']"
        label="location"
        required
-     ></v-select>
+     ></v-autocomplete>
       <v-btn
+      v-if="random"
        :disabled="!valid"
        color="success"
-       class="mr-4"
-       @click="validate"
-     >
-       Validate
-     </v-btn>
-   </v-form>    </v-app>
-</template>
-<script>
-export default {
-     data: () => ({
-       valid: true,
-       name: '',
-       nameRules: [
-         name=>!!name||'Name is required',
-       ],
-       email: '',
-       emailRules: [
-         email => !!email || 'E-mail is required',
-         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-       ],
-       select: null,
-       location: [
-         'Tamil Nadu',
-         'Kerala',
-         'Karnataka',
-         'Goa',
-         'Telangana',
-       ],
-       radioGroup: 1,
-     }),
-     methods: {
-       validate () {
-         this.$refs.form.validate()
-         const arr = {
-           name : this.name,
-           email : this.email,
-           gender :this.gender,
-           select: this.select,
-           row: this.row
-         }
-         console.log(JSON.stringify(arr))
+       @click="validate" >
+       submit
+     </v-btn> 
+     <v-btn
+     v-else
+       :disabled="!valid"
+       color="success"
+       @click="save" >
+       Update
+     </v-btn>  
+    </v-card>
+  </v-dialog>
+  </v-form>
+  <v-simple-table>
+        <thead>
+          <tr>
+            <th scope="col">Name </th>
+            <th scope="col">Email</th>
+            <th scope="col">gender</th>
+            <th scope="col">hobby</th>
+            <th scope="col">location</th>
+          </tr>
+        </thead>
+        <tbody>
+           <tr
+            v-for="(item,i) in info" :key = "i">
+            <td>{{ item.name }}</td>
+            <td>{{ item.email }}</td>
+            <td>{{ item.gender}}</td>
+            <td>{{ item.selectedHobbies }}</td>
+            <td>{{ item.selectedLocation }}</td>
+            <td>
+          <v-btn @click="edit(item)"><v-icon small>mdi-pencil</v-icon></v-btn>
+          <v-btn @click="del(item)"><v-icon small>mdi-delete</v-icon></v-btn>
+        </td>
+          </tr>
+        </tbody>
+        
+      </v-simple-table>
+  </v-app>
+  </template>
+  <script lang="ts">
+    export default {
+         data: () => ({
+            tempObj:{},
+            info :[],
+           valid: true,
+           name: '',
+           gender:'',
+           dialog : '',
+           nameRules: [
+             name=>!!name||'Name is required',
+           ],
+           email: '',
+           emailRules: [
+             email => !!email || 'E-mail is required',
+             v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+           ],
+           selectedLocation: '',
+           selectedHobbies:[],
+           hobbies : ['Dancing','Movies','Playing','Singing'],
+           location: [
+             'Tamil Nadu',
+             'Kerala',
+             'Karnataka',
+             'Goa',
+             'Telangana',
+           ],
+           random:true,
+         }),
+         methods: {
+            close(){
+                this.dialog = false
+            },
+           validate () {
+            const info = this.info
+            this.$refs.form.validate()
+             this.info.push({
+               name : this.name,
+               email : this.email,
+               gender :this.gender,
+               selectedLocation: this.selectedLocation,
+               selectedHobbies:this.selectedHobbies,
+             }),
+             console.log(info[0])
+             this.$refs.form.reset()
+             this.close()
+           },
+
+        del(item){
+        this.edit = this.info.indexOf(item)
+        this.editItem = Object.assign({}, item)
+        this.dialogDelete = true
+        this.info.splice(this.edit, 1)
+        
+        this.close()
+        },
+        edit(item) {
+        this.dialog = true
+        this.random=false
+        this.tempObj = item 
+        this.name = item.name
+        this.email = item.email
+        this.gender=item.gender
+        this.selectedHobbies= item.selectedHobbies
+        this.selectedLocation= item.selectedLocation
+      },
+      save() {
+        let test = this.arr.findIndex(temp => temp.id == this.tempObj.id)
+        
+          this.info[test].name = this.name
+          this.info[test].email = this.email
+          this.info[test].gender =this.gender
+          this.info[test].selectedHobbies= this.selectedHobbies
+          this.info[test].selectedLocation= this.selectedLocation
+         this.random=true
+
        }
-   }
-}
-</script>
+    }
+    }
+    </script>
