@@ -1,0 +1,180 @@
+
+<template>
+    <v-app>
+        <div>
+            
+            <searchKey @searchFunc="searchKey($event)"/>
+        
+        <v-form
+        ref="form">
+    
+        <v-dialog
+        v-model ="dialogbox"
+         width="500">
+        <template v-slot:activator="{on,attr}">
+        <v-flex text-right align-right>
+        <v-btn
+            color="primary"
+            v-bind="attr"
+            v-on="on"  
+        ><v-icon>
+            mdi-plus
+        </v-icon>
+        </v-btn>
+        </v-flex>
+        </template>
+        <v-card text class="white">
+        <v-text-field
+            v-model="id"
+            label="id"
+        ></v-text-field>
+        <v-text-field
+            v-model="name"
+            label="name"
+        ></v-text-field>
+        <v-text-field
+            v-model="department"
+            label="department"
+        ></v-text-field>
+        <v-text-field
+            v-model="language"
+            label="language"
+        ></v-text-field>
+        <v-btn
+            color="blue"
+            v-if="correct"
+            @click="add"
+            >submit
+        </v-btn>
+        <v-btn
+            color="blue"
+            v-else
+            @click="editform"
+            >update
+        </v-btn>
+        </v-card>
+        </v-dialog>
+        </v-form> 
+        </div> 
+    <v-simple-table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>department</th>
+                <th>language</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            <tr 
+            v-for="item in arr" :key="item.id"
+            >
+                <td>{{item.id}}</td>
+                <td>{{item.name| shorttrim}}</td>
+                <td>{{item.department}}</td>
+                <td>{{item.language}}</td>
+                <td> <v-btn @click="edit(item)"><v-icon small>mdi-pencil</v-icon></v-btn></td>
+                <td><v-btn @click="deleted(item.id)"><v-icon small>mdi-delete</v-icon></v-btn></td>
+        
+                
+            </tr>
+        </tbody>
+    </v-simple-table>
+
+    </v-app>
+</template>
+<script>
+    import Vue from 'vue'
+    import axios from 'axios'
+    import VueAxios from 'vue-axios'
+    import SearchKey from './searchKey.vue'
+    Vue.use(VueAxios,axios)
+    export default{
+    data: () => ({
+        id: "",
+        name: "",
+        department: "",
+        language: "",
+        arr: [],
+        dialogbox: false,
+        correct: true,
+        valform: {}
+    }),
+    mounted() {
+        Vue.axios.get("http://127.0.0.1:44759/read/")
+            .then((resp) => this.arr = resp.data);
+    },
+    methods: {
+        read() {
+            Vue.axios.get("http://127.0.0.1:44759/read/")
+                .then((resp) => this.arr = resp.data);
+        },
+        add() {
+            Vue.axios.post("http://127.0.0.1:44759/insert", {
+                id: this.id,
+                name: this.name,
+                department: this.department,
+                language: this.language,
+            });
+            this.dialogbox = false;
+            this.correct = true;
+            this.$refs.form.reset();
+            this.read();
+        },
+        deleted(id) {
+            Vue.axios.delete(`http://127.0.0.1:44759/delete/${id}`);
+            this.read();
+        },
+        edit(item) {
+            this.dialogbox = true;
+            this.correct = false;
+            this.valform = item;
+            this.id = item.id;
+            this.name = item.name;
+            this.department = item.department;
+            this.language = item.language;
+        },
+        editform() {
+            let test = this.arr.findIndex(temp => temp.id == this.valform.id);
+            this.arr[test].id = this.id;
+            this.arr[test].name = this.name;
+            this.arr[test].department = this.department;
+            this.arr[test].language = this.language;
+            this.dialogbox = false,
+                this.correct = true,
+                Vue.axios.put("http://127.0.0.1:44759/update/", {
+                    id: this.id,
+                    name: this.name,
+                    department: this.department,
+                    language: this.language
+                });
+            this.read();
+            this.resetform();
+            this.$refs.forms.reset();
+        },
+        // deleted(item){
+        //     this.editIndex = this.arr.indexOf(item)
+        //     this.arr.splice(this.editIndex,1)
+        //     this.removeitem=true          
+        // },
+        resetform() {
+            this.id = "";
+            this.name = "";
+            this.department = "";
+            this.language = "";
+        },
+        // close(){
+        // this.correct=false
+        // this.dialogbox=true
+        // this.resetform()
+        // },
+        searchKey(value) {
+            this.arr = value.data;
+        }
+    },
+    components: { SearchKey }
+}
+
+</script>
+
