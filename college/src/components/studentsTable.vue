@@ -25,19 +25,19 @@
         </template>
         <v-card text class="white">
         <v-text-field
-            v-model="id"
+            v-model="attributes.id"
             label="id"
         ></v-text-field>
         <v-text-field
-            v-model="name"
+            v-model="attributes.name"
             label="name"
         ></v-text-field>
         <v-text-field
-            v-model="department"
+            v-model="attributes.department"
             label="department"
         ></v-text-field>
         <v-text-field
-            v-model="language"
+            v-model="attributes.language"
             label="language"
         ></v-text-field>
         <v-btn
@@ -88,52 +88,55 @@
     import Vue from 'vue'
     import axios from 'axios'
     import VueAxios from 'vue-axios'
-    import SearchKey from './searchKey.vue'
+    import searchKey from './searchKey.vue'
     Vue.use(VueAxios,axios)
     export default{
-    data: () => ({
+    data(){
+        return{
+      attributes:{
         id: "",
         name: "",
         department: "",
         language: "",
+         },
+        
         arr: [],
         dialogbox: false,
         correct: true,
         valform: {}
-    }),
+    }
+},
     mounted() {
-        Vue.axios.get("http://127.0.0.1:44759/read/")
+        Vue.axios.get("http://127.0.0.1:3333/read/")
             .then((resp) => this.arr = resp.data);
     },
     methods: {
         read() {
-            Vue.axios.get("http://127.0.0.1:44759/read/")
+            Vue.axios.get("http://127.0.0.1:3333/read/")
                 .then((resp) => this.arr = resp.data);
         },
         add() {
-            Vue.axios.post("http://127.0.0.1:44759/insert", {
-                id: this.id,
-                name: this.name,
-                department: this.department,
-                language: this.language,
-            });
+            Vue.axios.post("http://127.0.0.1:3333/insert", this.attributes );
             this.dialogbox = false;
             this.correct = true;
             this.$refs.form.reset();
             this.read();
         },
         deleted(id) {
-            Vue.axios.delete(`http://127.0.0.1:44759/delete/${id}`);
+            Vue.axios.delete(`http://127.0.0.1:3333/delete/${id}`);
             this.read();
         },
         edit(item) {
             this.dialogbox = true;
             this.correct = false;
             this.valform = item;
-            this.id = item.id;
-            this.name = item.name;
-            this.department = item.department;
-            this.language = item.language;
+            this.attributes={
+                id :item.id,
+                name : item.name,
+                department : item.department,
+                language : item.language,
+                
+            }
         },
         editform() {
             let test = this.arr.findIndex(temp => temp.id == this.valform.id);
@@ -143,21 +146,14 @@
             this.arr[test].language = this.language;
             this.dialogbox = false,
                 this.correct = true,
-                Vue.axios.put("http://127.0.0.1:44759/update/", {
-                    id: this.id,
-                    name: this.name,
-                    department: this.department,
-                    language: this.language
-                });
+                Vue.axios.put("http://127.0.0.1:3333/update/", this.attributes);
+                
+                
             this.read();
             this.resetform();
             this.$refs.forms.reset();
         },
-        // deleted(item){
-        //     this.editIndex = this.arr.indexOf(item)
-        //     this.arr.splice(this.editIndex,1)
-        //     this.removeitem=true          
-        // },
+       
         resetform() {
             this.id = "";
             this.name = "";
@@ -173,7 +169,7 @@
             this.arr = value.data;
         }
     },
-    components: { SearchKey }
+    components: { searchKey }
 }
 
 </script>

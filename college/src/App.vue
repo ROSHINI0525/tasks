@@ -1,27 +1,29 @@
 <template>
   <v-app>
-    <!-- <v-div> -->
-    <!-- <booksTable/> -->
-    <studentsTable />
-    <searchKey />
-    <!-- </v-div> -->
+    <router-link to="/booksTable"><v-btn>booksTable</v-btn></router-link><br/>
+     <router-link to="/studentsTable"><v-btn>studentsTable</v-btn></router-link>
+     <router-view/>
   </v-app>
 </template>
 
-<script>
+<!-- <script>
 import searchKey from '@/components/searchKey.vue'
 import studentsTable from '@/components/studentsTable.vue'
+import booksTable from '@/components/booksTable.vue'
+
  
 
 export default {
   name: 'App',
   components: {
     searchKey,
-    studentsTable
+    studentsTable,
+    booksTable
+
 },
 
   data: () => ({
     
   }),
 };
-</script>
+</script> -->

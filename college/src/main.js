@@ -2,7 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
-
+import { ClientTable } from 'vue-tables-2';
+Vue.use(ClientTable);
 Vue.config.productionTip = false
 Vue.filter('shorttrim', function (value) {
   if (value.length>10){

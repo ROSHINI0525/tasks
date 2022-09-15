@@ -20,7 +20,7 @@ export default {
   },
   methods: {
       async search() {
-          await axios.post('http://127.0.0.1:44759/search', {
+          await axios.post('http://127.0.0.1:3333/search', {
               searchKey: this.searchKey
           }).then((response) => {
               this.$emit('searchFunc', response)
