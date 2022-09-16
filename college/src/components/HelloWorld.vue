@@ -1,151 +1,174 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
+  <v-app>
+      <div>
+          
+          <searchKey @searchFunc="searchKey($event)"/>
+      
+      <v-form
+      ref="form">
+  
+      <v-dialog
+      v-model ="dialogbox"
+       width="500">
+      <template v-slot:activator="{on,attr}">
+      <v-flex text-right align-right>
+      <v-btn
+          color="primary"
+          v-bind="attr"
+          v-on="on"  
+      ><v-icon>
+          mdi-plus
+      </v-icon>
+      </v-btn>
+      </v-flex>
+      </template>
+      <v-card text class="white">
+      <v-text-field
+          v-model="attributes.id"
+          label="id"
+      ></v-text-field>
+      <v-text-field
+          v-model="attributes.name"
+          label="name"
+      ></v-text-field>
+      <v-text-field
+          v-model="attributes.department"
+          label="department"
+      ></v-text-field>
+      <v-text-field
+          v-model="attributes.language"
+          label="language"
+      ></v-text-field>
+      <v-btn
+          color="blue"
+          v-if="correct"
+          @click="add"
+          >submit
+      </v-btn>
+      <v-btn
+          color="blue"
+          v-else
+          @click="editform"
+          >update
+      </v-btn>
+      </v-card>
+      </v-dialog>
+      </v-form> 
+      </div> 
+  <v-simple-table>
+      <thead>
+          <tr>
+              <th>id</th>
+              <th>name</th>
+              <th>department</th>
+              <th>language</th>
+          </tr>
 
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
-        </h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br>please join our online
-          <a
-            href="https://community.vuetifyjs.com"
-            target="_blank"
-          >Discord Community</a>
-        </p>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          What's next?
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
+      </thead>
+      <tbody>
+          <tr 
+          v-for="item in arr" :key="item.id"
           >
-            {{ next.text }}
-          </a>
-        </v-row>
-      </v-col>
+              <td>{{item.id}}</td>
+              <td>{{item.name| shorttrim}}</td>
+              <td>{{item.department}}</td>
+              <td>{{item.language}}</td>
+              <td> <v-btn @click="edit(item)"><v-icon small>mdi-pencil</v-icon></v-btn></td>
+              <td><v-btn @click="deleted(item.id)"><v-icon small>mdi-delete</v-icon></v-btn></td>
+      
+              
+          </tr>
+      </tbody>
+  </v-simple-table>
 
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Important Links
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Ecosystem
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-container>
+  </v-app>
 </template>
-
 <script>
-  export default {
-    name: 'HelloWorld',
+  import Vue from 'vue'
+  import axios from 'axios'
+  import VueAxios from 'vue-axios'
+  import searchKey from './searchKey.vue'
+  import { read,insert } from '../components/service/axios.js'
 
-    data: () => ({
-      ecosystem: [
-        {
-          text: 'vuetify-loader',
-          href: 'https://github.com/vuetifyjs/vuetify-loader',
-        },
-        {
-          text: 'github',
-          href: 'https://github.com/vuetifyjs/vuetify',
-        },
-        {
-          text: 'awesome-vuetify',
-          href: 'https://github.com/vuetifyjs/awesome-vuetify',
-        },
-      ],
-      importantLinks: [
-        {
-          text: 'Documentation',
-          href: 'https://vuetifyjs.com',
-        },
-        {
-          text: 'Chat',
-          href: 'https://community.vuetifyjs.com',
-        },
-        {
-          text: 'Made with Vuetify',
-          href: 'https://madewithvuejs.com/vuetify',
-        },
-        {
-          text: 'Twitter',
-          href: 'https://twitter.com/vuetifyjs',
-        },
-        {
-          text: 'Articles',
-          href: 'https://medium.com/vuetify',
-        },
-      ],
-      whatsNext: [
-        {
-          text: 'Explore components',
-          href: 'https://vuetifyjs.com/components/api-explorer',
-        },
-        {
-          text: 'Select a layout',
-          href: 'https://vuetifyjs.com/getting-started/pre-made-layouts',
-        },
-        {
-          text: 'Frequently Asked Questions',
-          href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
-        },
-      ],
-    }),
+  Vue.use(VueAxios,axios)
+  export default{
+  data(){
+      return{
+    attributes:{
+      id: "",
+      name: "",
+      department: "",
+      language: "",
+       },
+      
+      arr: [],
+      dialogbox: false,
+      correct: true,
+      valform: {}
   }
+},
+  async mounted() {
+      // this.arr=await read()
+      Vue.axios.get(`${process.env.VUE_APP_APPKEY}/read/`)
+          .then((resp) => this.arr = resp.data);
+  },
+  methods: {
+      read() {
+          Vue.axios.get(`${process.env.VUE_APP_APPKEY}/read/`)
+              .then((resp) => this.arr = resp.data);
+      },
+      add() {
+          Vue.axios.post(`${process.env.VUE_APP_APPKEY}/insert`, this.attributes );
+          this.dialogbox = false;
+          this.correct = true;
+          this.$refs.form.reset();
+          this.read();
+      },
+      deleted(id) {
+          Vue.axios.delete(`${process.env.VUE_APP_APPKEY}/delete/${id}`);
+          this.read();
+      },
+      edit(item) {
+          this.dialogbox = true;
+          this.correct = false;
+          this.valform = item;
+          this.attributes={
+              id :item.id,
+              name : item.name,
+              department : item.department,
+              language : item.language,
+              
+          }
+      },
+      editform() {
+          // let test = this.arr.findIndex(temp => temp.id == this.valform.id);
+          // this.arr[test].id = this.id;
+          // this.arr[test].name = this.name;
+          // this.arr[test].department = this.department;
+          // this.arr[test].language = this.language;
+          this.dialogbox = false,
+              this.correct = true,
+              Vue.axios.put(`${process.env.VUE_APP_APPKEY}/update/`, this.attributes);
+              
+              
+          this.read();
+          this.resetform();
+          this.$refs.forms.reset();
+      },
+     
+      resetform() {
+          this.id = "";
+          this.name = "";
+          this.department = "";
+          this.language = "";
+      },
+      
+      searchKey(value) {
+          this.arr = value.data;
+      }
+  },
+  components: { searchKey }
+}
+
 </script>
+

@@ -3,11 +3,12 @@
       <v-text-field 
       v-model="searchKey"
        placeholder="search"
+       @keyup="search()"
        ></v-text-field>
-      <v-btn 
+      <!-- <v-btn 
       @click="search()"
       >search
-      </v-btn>
+      </v-btn> -->
   </v-container>
 </template>
 <script>
@@ -20,12 +21,20 @@ export default {
   },
   methods: {
       async search() {
-          await axios.post('http://127.0.0.1:3333/search', {
+          await axios.post(`${process.env.VUE_APP_APPKEY}/search`, {
               searchKey: this.searchKey
           }).then((response) => {
               this.$emit('searchFunc', response)
           })
       }
-  }
+  },
+//   async search() {
+//           await axios.post(`${process.env.VUE_APP_APPKEY}/booksearch`, {
+//               searchKey: this.searchKey
+//           }).then((response) => {
+//               this.$emit('searchFunc', response)
+//           })
+//       }
+  
 }
 </script>

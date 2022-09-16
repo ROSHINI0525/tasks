@@ -66,7 +66,21 @@
     :items="arr"
     :items-per-page="10"
     class="elevation-1"
-  ></v-data-table>
+  ><template v-slot:[`item.actions`]="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        small
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
+    </template></v-data-table>
 </div>
 </div>
 </template>
@@ -76,6 +90,7 @@
     import axios from 'axios'
     import VueAxios from 'vue-axios'
     Vue.use(VueAxios,axios)
+    import searchKey from './searchKey.vue'
 
 export default {
   name: "booksTable",
@@ -87,13 +102,13 @@ export default {
           { text: 'author', value: 'author' },
           { text: 'price', value: 'price' },
           { text: 'year', value: 'year' },
-         
+          { text: 'Actions', value: 'actions', sortable: false },
         ],
         attributes:{
-        id: "",
+        id: null,
         author: "",
-        price: "",
-        year: "",
+        price: null,
+        year: null,
          },
          arr: [],     
          dialogbox: false,
@@ -101,19 +116,19 @@ export default {
       }
   },
   mounted() {
-      this.axios.get("http://127.0.0.1:40695/bookread/").then((response) => {
+      this.axios.get("http://127.0.0.1:46171/bookread/").then((response) => {
           this.arr = response.data
       })
   },
   methods:{
     read() {
-            Vue.axios.get("http://127.0.0.1:40695/bookread/")
+            Vue.axios.get("http://127.0.0.1:46171/bookread/")
                 .then((resp) => this.arr = resp.data);
         },
 
 
     add() {
-            Vue.axios.post("http://127.0.0.1:40695/bookinsert", this.attributes )
+            Vue.axios.post("http://127.0.0.1:46171/bookinsert", this.attributes )
             .then((res)=>{
               console.log(res);
               this.read();
@@ -121,7 +136,10 @@ export default {
             this.dialogbox = false;
             this.correct = true;      
         },
-  }
+        
+  },
+  components: { searchKey }
+  
   
 
 }

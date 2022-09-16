@@ -43,7 +43,7 @@
         <v-btn
             color="blue"
             v-if="correct"
-            @click="add"
+            @click="insertStudents"
             >submit
         </v-btn>
         <v-btn
@@ -59,10 +59,22 @@
     <v-simple-table>
         <thead>
             <tr>
-                <th>id</th>
-                <th>name</th>
-                <th>department</th>
-                <th>language</th>
+                <th>id
+                    <button @click="sortIdA()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
+                    <button @click="sortIdD()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                </th>
+                <th>name
+                    <button @click="sortNameA()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
+                    <button @click="sortNameD()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                </th>
+                <th>department
+                    <button @click="sortDepartmentA()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
+                    <button @click="sortDepartmentD()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                </th>
+                <th>language
+                    <button @click="sortLanguageA()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
+                    <button @click="sortLanguageD()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                </th>
             </tr>
 
         </thead>
@@ -75,7 +87,7 @@
                 <td>{{item.department}}</td>
                 <td>{{item.language}}</td>
                 <td> <v-btn @click="edit(item)"><v-icon small>mdi-pencil</v-icon></v-btn></td>
-                <td><v-btn @click="deleted(item.id)"><v-icon small>mdi-delete</v-icon></v-btn></td>
+                <td><v-btn @click="deleteStudents(item.id)"><v-icon small>mdi-delete</v-icon></v-btn></td>
         
                 
             </tr>
@@ -89,6 +101,8 @@
     import axios from 'axios'
     import VueAxios from 'vue-axios'
     import searchKey from './searchKey.vue'
+    import { read,insert,deleted,update,sortidasc } from '../components/service/axios.js'
+
     Vue.use(VueAxios,axios)
     export default{
     data(){
@@ -107,24 +121,40 @@
     }
 },
     mounted() {
-        Vue.axios.get("http://127.0.0.1:3333/read/")
-            .then((resp) => this.arr = resp.data);
+        read()
+         .then((resp) => this.arr = resp);
+        // Vue.axios.get(`${process.env.VUE_APP_APPKEY}/read/`)
+        //     .then((resp) => this.arr = resp.data);
     },
     methods: {
-        read() {
-            Vue.axios.get("http://127.0.0.1:3333/read/")
-                .then((resp) => this.arr = resp.data);
-        },
-        add() {
-            Vue.axios.post("http://127.0.0.1:3333/insert", this.attributes );
+        readStudents(){
+               read()
+               .then((resp) => this.arr = resp);
+             },
+        // read() {
+        //     Vue.axios.get(`${process.env.VUE_APP_APPKEY}/read/`)
+        //         .then((resp) => this.arr = resp.data);
+        // },
+        insertStudents(){
             this.dialogbox = false;
             this.correct = true;
-            this.$refs.form.reset();
-            this.read();
-        },
-        deleted(id) {
-            Vue.axios.delete(`http://127.0.0.1:3333/delete/${id}`);
-            this.read();
+            insert(this.attributes)
+            .then((resp)=>{
+                this.arr=resp
+                this.$refs.form.reset();
+                this.readStudents();
+            })   
+          },
+        // add() {
+        //     Vue.axios.post(`${process.env.VUE_APP_APPKEY}/insert`, this.attributes );
+        //     this.dialogbox = false;
+        //     this.correct = true;
+        //     this.$refs.form.reset();
+        //     this.read();
+        // },
+        deleteStudents(id){
+            deleted(id)
+            this.readStudents();
         },
         edit(item) {
             this.dialogbox = true;
@@ -139,19 +169,23 @@
             }
         },
         editform() {
-            let test = this.arr.findIndex(temp => temp.id == this.valform.id);
-            this.arr[test].id = this.id;
-            this.arr[test].name = this.name;
-            this.arr[test].department = this.department;
-            this.arr[test].language = this.language;
+            // let test = this.arr.findIndex(temp => temp.id == this.valform.id);
+            // this.arr[test].id = this.id;
+            // this.arr[test].name = this.name;
+            // this.arr[test].department = this.department;
+            // this.arr[test].language = this.language;
             this.dialogbox = false,
                 this.correct = true,
-                Vue.axios.put("http://127.0.0.1:3333/update/", this.attributes);
-                
-                
-            this.read();
+                // Vue.axios.put(`${process.env.VUE_APP_APPKEY}/update/`, this.attributes);
+                update(this.attributes)
+                .then((resp)=>{
+                this.arr=resp
+                this.$refs.form.reset();
+                this.readStudents();
+            }) 
             this.resetform();
             this.$refs.forms.reset();
+            this.readStudents();
         },
        
         resetform() {
@@ -160,14 +194,27 @@
             this.department = "";
             this.language = "";
         },
-        // close(){
-        // this.correct=false
-        // this.dialogbox=true
-        // this.resetform()
-        // },
+        
         searchKey(value) {
             this.arr = value.data;
+        },
+        sortIdA(){
+            sortidasc()
+            {
+            console.log(this.arr)
+           .then((resp)=>{
+            this.arr=resp
+        })
+        }},
+        sortIdD(){
+            sortidasc()
+            {
+            console.log(this.arr)
+           .then((resp)=>{
+            this.arr=resp
+        })
         }
+    }
     },
     components: { searchKey }
 }
