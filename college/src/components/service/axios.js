@@ -33,22 +33,22 @@ async function update(value){
 
 }
 async function sortidasc(){
-    return result = await Vue.axios.get(`${process.env.VUE_APP_APPKEY}/Sortidasc/`)
+    return await Vue.axios.get(`${process.env.VUE_APP_APPKEY}/Sortidasc/`)
 }
 async function sortiddsc(){
     return await Vue.axios.get(`${process.env.VUE_APP_APPKEY}/Sortiddsc/`)
 }
 async function sortnameasc(){
-    return result = await Vue.axios.get(`${process.env.VUE_APP_APPKEY}/Sortnameasc/`)
+    return await Vue.axios.get(`${process.env.VUE_APP_APPKEY}/Sortnameasc/`)
 }
 async function sortnamedsc(){
-    return result = await Vue.axios.get(`${process.env.VUE_APP_APPKEY}/Sortnamedsc/`)
+    return await Vue.axios.get(`${process.env.VUE_APP_APPKEY}/Sortnamedsc/`)
 }
 async function sortdepartmentasc(){
     return result = await Vue.axios.get(`${process.env.VUE_APP_APPKEY}/Sortdepartmentasc/`)
 }
 async function sortdepartmentdsc(){
-    return result = await Vue.axios.get(`${process.env.VUE_APP_APPKEY}/Sortdepartmentsc/`)
+    return result = await Vue.axios.get(`${process.env.VUE_APP_APPKEY}/Sortdepartmentdsc/`)
 }
 async function sortlanguageasc(){
     return result = await Vue.axios.get(`${process.env.VUE_APP_APPKEY}/Sortlanguageasc/`)

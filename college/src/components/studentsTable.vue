@@ -60,20 +60,20 @@
         <thead>
             <tr>
                 <th>id
-                    <button @click="sortIdA()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
-                    <button @click="sortIdD()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                    <button @click="sortIdA()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                    <button @click="sortIdD()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
                 </th>
                 <th>name
-                    <button @click="sortNameA()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
-                    <button @click="sortNameD()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                    <button @click="sortNameA()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                    <button @click="sortNameD()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
                 </th>
                 <th>department
-                    <button @click="sortDepartmentA()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
-                    <button @click="sortDepartmentD()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                    <button @click="sortDepartmentA()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                    <button @click="sortDepartmentD()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
                 </th>
                 <th>language
-                    <button @click="sortLanguageA()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
-                    <button @click="sortLanguageD()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                    <button @click="sortLanguageA()"><span class="mdi mdi-arrow-up-drop-circle"></span></button>
+                    <button @click="sortLanguageD()"><span class="mdi mdi-arrow-down-drop-circle"></span></button>
                 </th>
             </tr>
 
@@ -101,7 +101,7 @@
     import axios from 'axios'
     import VueAxios from 'vue-axios'
     import searchKey from './searchKey.vue'
-    import { read,insert,deleted,update,sortidasc } from '../components/service/axios.js'
+    import { read,insert,deleted,update,sortidasc,sortiddsc,sortnameasc,sortnamedsc,sortdepartmentasc,sortdepartmentdsc,sortlanguageasc,sortlanguagedsc} from '../components/service/axios.js'
 
     Vue.use(VueAxios,axios)
     export default{
@@ -200,21 +200,46 @@
         },
         sortIdA(){
             sortidasc()
-            {
-            console.log(this.arr)
            .then((resp)=>{
-            this.arr=resp
-        })
-        }},
+            this.arr=resp.data})
+           },
         sortIdD(){
-            sortidasc()
-            {
-            console.log(this.arr)
+            sortiddsc()
            .then((resp)=>{
-            this.arr=resp
+            this.arr=resp.data
         })
-        }
-    }
+        },
+        sortNameA(){
+            sortnameasc()
+           .then((resp)=>{
+            this.arr=resp.data})
+           },
+        sortNameD(){
+            sortnamedsc()
+           .then((resp)=>{
+            this.arr=resp.data})
+           },
+        sortDepartmentA(){
+            sortdepartmentasc()
+           .then((resp)=>{
+            this.arr=resp.data})
+           },
+        sortDepartmentD(){
+            sortdepartmentdsc()
+           .then((resp)=>{
+            this.arr=resp.data})
+           },
+        sortLanguageA(){
+            sortlanguageasc()
+           .then((resp)=>{
+            this.arr=resp.data})
+           },
+        sortLanguageD(){
+            sortlanguagedsc()
+           .then((resp)=>{
+            this.arr=resp.data})
+           },
+
     },
     components: { searchKey }
 }

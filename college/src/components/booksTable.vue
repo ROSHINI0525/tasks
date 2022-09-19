@@ -38,6 +38,7 @@
         ></v-text-field>
         <v-text-field
             v-model="attributes.price"
+           
             label="price"
         ></v-text-field>
         <v-text-field
@@ -66,21 +67,12 @@
     :items="arr"
     :items-per-page="10"
     class="elevation-1"
-  ><template v-slot:[`item.actions`]="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-    </template></v-data-table>
+  >
+  <template v-slot:[`item.actions`]="{ item }">
+      <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+      <v-icon small class="mr-2" @click="deleted(item.id)">mdi-delete</v-icon>
+  </template>
+</v-data-table>
 </div>
 </div>
 </template>
@@ -113,22 +105,23 @@ export default {
          arr: [],     
          dialogbox: false,
          correct: true,
+         valform: {}
       }
   },
   mounted() {
-      this.axios.get("http://127.0.0.1:46171/bookread/").then((response) => {
+      this.axios.get("http://127.0.0.1:3333/bookread/").then((response) => {
           this.arr = response.data
       })
   },
   methods:{
     read() {
-            Vue.axios.get("http://127.0.0.1:46171/bookread/")
+            Vue.axios.get("http://127.0.0.1:3333/bookread/")
                 .then((resp) => this.arr = resp.data);
         },
 
 
     add() {
-            Vue.axios.post("http://127.0.0.1:46171/bookinsert", this.attributes )
+            Vue.axios.post("http://127.0.0.1:3333/bookinsert", this.attributes )
             .then((res)=>{
               console.log(res);
               this.read();
@@ -136,6 +129,46 @@ export default {
             this.dialogbox = false;
             this.correct = true;      
         },
+    deleted(id) {
+        Vue.axios.delete(`http://127.0.0.1:3333/bookdelete/${id}`);
+            this.read();
+        },
+    editItem(item) {
+        this.dialogbox = true;
+        this.correct = false;
+        this.valform = item;
+        this.attributes={
+                id :item.id,
+                author : item.author,
+                price : item.price,
+                year : item.year,
+                
+            }
+        },
+     editform() {
+            let test = this.arr.findIndex(temp => temp.id == this.valform.id);
+            this.arr[test].id = this.id;
+            this.arr[test].author = this.author;
+            this.arr[test].price = this.price;
+            this.arr[test].year = this.year;
+            this.dialogbox = false,
+                this.correct = true,
+                Vue.axios.put("http://127.0.0.1:3333/bookupdate",this.attributes) ;
+            this.read();
+            this.resetform();
+            this.$refs.forms.reset();
+        },
+     resetform() {
+            this.id = "";
+            this.author = "";
+            this.price = "";
+            this.year = "";
+        },
+
+    searchKey(value) {
+        this.arr = value.data;
+     },
+    
         
   },
   components: { searchKey }
