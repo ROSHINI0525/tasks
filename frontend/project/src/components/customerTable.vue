@@ -151,11 +151,11 @@
               this.contacts = "";
               this.year = "";
           },
-  
-      searchKey(value) {
-          this.arr = value.data;
+       async searchKey(value) {
+        await axios.post("http://127.0.0.1:3333/search", value
+          ).then((value)=>{this.arr = value.data})
+          
        },
-      
           
     },
     components: { searchKey }

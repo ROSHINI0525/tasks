@@ -180,8 +180,10 @@
              
           },
   
-      searchKey(value) {
-          this.arr = value.data;
+      async searchKey(value) {
+        await axios.post("http://127.0.0.1:3333/hotelsearch", value
+          ).then((value)=>{this.arr = value.data})
+          
        },
       
           

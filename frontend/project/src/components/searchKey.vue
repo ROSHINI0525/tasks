@@ -10,7 +10,6 @@
     
 </template>
 <script>
-import axios from 'axios';
 export default {
   name: "searchKey",
   data() {
@@ -19,18 +18,8 @@ export default {
   },
   methods: {
       async search() {
-          await axios.post("http://127.0.0.1:3333/search", {
-              searchKey: this.searchKey
-          }).then((response) => {
-              this.$emit('searchFunc', response)
-          })
-      },
-      async hotelsearch() {
-          await axios.post("http://127.0.0.1:3333/hotelsearch", {
-              searchKey: this.searchKey
-          }).then((response) => {
-              this.$emit('searchFunc', response)
-          })
+         this.$emit('searchFunc',{searchKey:this.searchKey})
+          
       }
   },
 }
