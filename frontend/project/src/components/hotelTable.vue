@@ -47,6 +47,10 @@
               v-model="attributes.pincode"
               label="pincode"
           ></v-text-field>
+          <v-text-field
+              v-model="attributes.customerId"
+              label="customerId"
+          ></v-text-field>
          
           <v-btn
               color="blue"
@@ -71,6 +75,7 @@
       :items-per-page="10"
       class="elevation-1"
     >
+   
     <template v-slot:[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
         <v-icon small class="mr-2" @click="deleted(item.id)">mdi-delete</v-icon>
@@ -94,30 +99,40 @@
           headers: [
            
             { text: 'id', value: 'id' },
+            // { text: 'customer_id', value: 'id' },
             { text: 'branch', value: 'branch' },
-            { text: 'door_number', value: 'door_number' },
-            { text: 'street', value: 'street' },
-            { text: 'landmark', value: 'landmark' },
-            { text: 'pincode', value: 'pincode' },
+            // { text: 'door_number', value: 'door_number' },
+            // { text: 'street', value: 'street' },
+            // { text: 'landmark', value: 'landmark' },
+            // { text: 'pincode', value: 'pincode' },
+            // { text: 'address', value: 'door_number'+','+ 'street '+','+ 'landmark' +','+ 'pincode'},
+            { text: 'address', value: 'address' },
+            { text: 'customer_id', value: 'customer_id' },
+            { text: 'name', value: 'name' },
             { text: 'Actions', value: 'actions', sortable: false },
           ],
+          arr: [], 
+
           attributes:{
           id: null,
           branch: "",
           doorNumber:null,
           street:"",
           landmark:"",
-          pincode:null
-           },
-           arr: [],     
-           dialogbox: false,
-           correct: true,
-           valform: {}
+          pincode:null,
+          customerId:null
+        },  
+
+
+          dialogbox: false,
+          correct: true,
+          valform: {}
         }
     },
     mounted() {
-        this.axios.get("http://127.0.0.1:3333/hotelread/").then((response) => {
+        this.axios.get("http://127.0.0.1:3333/jointable").then((response) => {
             this.arr = response.data
+            console.log(this.arr)
         })
     },
     methods:{
@@ -152,6 +167,7 @@
                   street : item.street,
                   landmark : item.landmark,
                   pincode : item.pincode,
+                  customerId : item.customer_id
               }
           },
        editform() {
@@ -162,6 +178,7 @@
               this.arr[test].street = this.street;
               this.arr[test].landmark = this.landmark;
               this.arr[test].pincode = this.pincode;
+              this.arr[test].customer_id = this.customer_id;
               this.dialogbox = false,
                   this.correct = true,
                   Vue.axios.put("http://127.0.0.1:3333/hotelupdate",this.attributes) ;
@@ -176,6 +193,8 @@
               this.street = "";
               this.landmark = "";
               this.pincode = "";
+              this.customer_id = "";
+
               
              
           },

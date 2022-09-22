@@ -19,4 +19,7 @@ export default class Hotel extends BaseModel {
   @column()
   public pincode: number
 
+  @column()
+  public customerId: number
+
 }

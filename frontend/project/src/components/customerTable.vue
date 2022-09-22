@@ -1,56 +1,56 @@
 <template>
-    <div>
+  <div>
     <div>
       <searchKey @searchFunc="searchKey($event)"/>
           
-          <v-form
+        <v-form
           ref="form">
       
-          <v-dialog
+        <v-dialog
           v-model ="dialogbox"
            width="500">
-          <template v-slot:activator="{on,attr}">
-          <v-flex text-right align-right>
-          <v-btn
-              color="primary"
-              v-bind="attr"
-              v-on="on"  
-          ><v-icon>
-              mdi-plus
-          </v-icon>
-          </v-btn>
-          </v-flex>
-          </template>
-          <v-card text class="white">
-          <v-text-field
-              v-model="attributes.id"
-              label="id"
-          ></v-text-field>
-          <v-text-field
-              v-model="attributes.name"
-              label="name"
-          ></v-text-field>
-          <v-text-field
-              v-model="attributes.contacts"
+        <template v-slot:activator="{on,attr}">
+        <v-flex text-right align-right>
+        <v-btn
+            color="primary"
+            v-bind="attr"
+            v-on="on"  
+        ><v-icon>
+            mdi-plus
+        </v-icon>
+        </v-btn>
+        </v-flex>
+        </template>
+        <v-card text class="white">
+        <v-text-field
+            v-model="attributes.id"
+            label="id"
+        ></v-text-field>
+        <v-text-field
+            v-model="attributes.name"
+            label="name"
+        ></v-text-field>
+        <v-text-field
+            v-model="attributes.contacts"
              
-              label="contacts"
-          ></v-text-field>
+            label="contacts"
+        ></v-text-field>
          
-          <v-btn
-              color="blue"
-              v-if="correct"
-              @click="add"
-              >submit
-          </v-btn>
-          <v-btn
-              color="blue"
-              v-else
-              @click="editform"
-              >update
-          </v-btn>
-          </v-card>
-          </v-dialog>
-          </v-form> 
+        <v-btn
+            color="blue"
+            v-if="correct"
+            @click="add"
+            >submit
+        </v-btn>
+        <v-btn
+            color="blue"
+            v-else
+            @click="editform"
+            >update
+        </v-btn>
+        </v-card>
+        </v-dialog>
+        </v-form> 
     </div>
     <div>
       <v-data-table
@@ -63,7 +63,7 @@
         <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
         <v-icon small class="mr-2" @click="deleted(item.id)">mdi-delete</v-icon>
     </template>
-  </v-data-table>
+     </v-data-table>
   </div>
   </div>
   </template>
@@ -84,6 +84,7 @@
             { text: 'id', value: 'id' },
             { text: 'name', value: 'name' },
             { text: 'contacts', value: 'contacts' },
+            { text: 'hotelowned', value: 'hotelowned' },
             { text: 'Actions', value: 'actions', sortable: false },
           ],
           attributes:{
@@ -98,7 +99,7 @@
         }
     },
     mounted() {
-        this.axios.get("http://127.0.0.1:3333/read/").then((response) => {
+        this.axios.get("http://127.0.0.1:3333/count/").then((response) => {
             this.arr = response.data
         })
     },
@@ -154,8 +155,8 @@
        async searchKey(value) {
         await axios.post("http://127.0.0.1:3333/search", value
           ).then((value)=>{this.arr = value.data})
-          
-       },
+         this.read()
+          },
           
     },
     components: { searchKey }

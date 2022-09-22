@@ -50,4 +50,15 @@ export default class CustomersController {
 
         })
     }
+
+    public async hotelowned(){
+     
+        return await  Database 
+        .from('customers').join('hotels','customers.id','hotels.customer_id')
+            .select('customers.*')
+            .groupBy('customers.id')
+            .count("customers.id as hotelowned")
+            .orderBy('hotelowned','asc')
+            
+        }
 }

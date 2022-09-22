@@ -25,9 +25,14 @@ Route.delete('delete/:id','CustomersController.delete')
 Route.put('update','CustomersController.update')
 Route.get('read','CustomersController.read')
 Route.post('search','CustomersController.search')
+Route.get('count','CustomersController.hotelowned')
+
+
 
 Route.post('hotelinsert','HotelsController.insert')
 Route.delete('hoteldelete/:id','HotelsController.delete')
 Route.put('hotelupdate','HotelsController.update')
 Route.get('hotelread','HotelsController.read')
 Route.post('hotelsearch','HotelsController.search')
+Route.get('ownerName','HotelsController.ownerName')
+Route.get('jointable','HotelsController.joinTable')

@@ -2,6 +2,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Hotel from 'App/Models/Hotel'
 import HotelValidator from 'App/Validators/HotelValidator'
 import Database from '@ioc:Adonis/Lucid/Database'
+import Customer from 'App/Models/Customer'
 
 export default class HotelsController {
     public async insert({request}:HttpContextContract){
@@ -13,6 +14,7 @@ export default class HotelsController {
         user.street=val['street']
         user.landmark=val['landmark']
         user.pincode=val['pincode']
+        user.customerId=val['customerId']
         await user.save()
         return "inserted successfully"
     }
@@ -30,6 +32,7 @@ export default class HotelsController {
         user.street = val.street
         user.landmark = val.landmark
         user.pincode = val.pincode
+        user.customerId = val.customerId
         user.save()
         return user
     }
@@ -47,6 +50,7 @@ export default class HotelsController {
                 .where('id',data)
                 .orWhere('door_number',data)
                 .orWhere('pincode',data)
+                .orWhere('customer_id',data)
                 
             }
         })
@@ -55,8 +59,28 @@ export default class HotelsController {
             .whereILike('branch','%'+data+'%')
             .orWhereILike('street','%'+data+'%')
             .orWhereILike('landmark','%'+data+'%')
-
-
         })
+    }
+
+    public async ownerName(){
+        const data =  await  Hotel.query().join('customers','customers.id','hotels.customer_id')
+            .select('*')
+        console.log(data)
+        return data
+        }
+    public async joinTable(){
+        const data =  await Customer.query().join('hotels','customers.id', '=','hotels.customer_id')
+                                            .select('*')
+
+        const newData = data.map(el => Object.assign({},el.$attributes,{
+            customer_id:el.$extras['customer_id'],
+            branch : el.$extras['branch'],
+            address: el.$extras['door_number'] + ',' 
+                    +el.$extras['street'] + ','
+                    +el.$extras['landmark'] + ','
+                    +el.$extras['pincode'] + ','
+        }))
+        console.log(newData)
+        return newData
     }
 }

@@ -30,6 +30,8 @@ export default class HotelValidator {
     street:schema.string(), 
     landmark:schema.string(),
     pincode:schema.number(), 
+    customerId:schema.number(),
+
   })
 
   /**
